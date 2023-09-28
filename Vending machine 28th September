@@ -1,0 +1,13 @@
+#include <stdio.h>
+
+int main()
+{
+    printf("Welcome to the vending machine! \n please select the available option.\n");
+    printf("Product 1 - Oreo biscuit - 2.00 dhm\n");
+    printf("Product 2 - mountain dew zero - 3.00dhm\n");
+    printf("Product 3 - Pringles original - 5.25dhm\n");
+    printf("Admin Mode.\n");
+    printf("Exit.\n");
+    
+    return 0;
+}
