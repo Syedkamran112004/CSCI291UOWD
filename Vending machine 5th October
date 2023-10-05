@@ -1,0 +1,84 @@
+#include <stdio.h>
+
+int main()
+{
+    printf("Welcome to the vending machine! \n please select the available option.\n");
+    printf("Product 1 - A - 2.00 dhm\n");
+    printf("Product 2 - B - 3.00dhm\n");
+    printf("Product 3 - C- 5.25dhm\n");
+    printf("Admin Mode.\n");
+    printf("Exit.\n");
+    
+int choice;
+    float product1Price = 2.0;
+    float product2Price = 3.0;
+    float product3Price = 5.25;
+    float balance = 0.0;
+
+    while (1) {
+        printf("Current Balance: %.2f dhm\n", balance);
+
+        printf("Enter your choice (1-3 for products, 4 for Admin Mode, 5 to Exit): ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("You selected Product 1 - A\n");
+                while (balance < product1Price) {
+                    float coin;
+                    printf("Insert coin (1.00, 0.50, or 0.25 dhm): ");
+                    scanf("%f", &coin);
+                    if (coin == 1.0 || coin == 0.5 || coin == 0.25) {
+                        balance += coin;
+                    } else {
+                        printf("Invalid coin. Please insert a valid coin.\n");
+                    }
+                }
+                printf("Product 1 - A dispensed. Enjoy!\n");
+                balance -= product1Price;
+                break;
+            case 2:
+                printf("You selected Product 2 - B\n");
+                while (balance < product2Price) {
+                    float coin;
+                    printf("Insert coin (1.00, 0.50, or 0.25 dhm): ");
+                    scanf("%f", &coin);
+                    if (coin == 1.0 || coin == 0.5 || coin == 0.25) {
+                        balance += coin;
+                    } else {
+                        printf("Invalid coin. Please insert a valid coin.\n");
+                    }
+                }
+                printf("Product 2 - B dispensed. Enjoy!\n");
+                balance -= product2Price;
+                break;
+            case 3:
+                printf("You selected Product 3 - C\n");
+                while (balance < product3Price) {
+                    float coin;
+                    printf("Insert coin (1.00, 0.50, or 0.25 dhm): ");
+                    scanf("%f", &coin);
+                    if (coin == 1.0 || coin == 0.5 || coin == 0.25) {
+                        balance += coin;
+                    } else {
+                        printf("Invalid coin. Please insert a valid coin.\n");
+                    }
+                }
+                printf("Product 3 - C dispensed. Enjoy!\n");
+                balance -= product3Price;
+                break;
+            case 4:
+                printf("Entering Admin Mode...\n");
+                // Add your admin mode code here
+                break;
+            case 5:
+                printf("Exiting. Thank you!\n");
+                return 0;
+            default:
+                printf("Invalid choice. Please select a valid option.\n");
+                break;
+        }
+    }
+
+    return 0;
+}
