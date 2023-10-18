@@ -1,82 +1,177 @@
 #include <stdio.h>
+#include <stdlib.h>
+int password = 112004; // Admin password
+const int Min = 6; // Minimum quantity for alert
+float total_amount = 0; // Total amount of sales
 
-int main()
-{
-    printf("Welcome to the vending machine! \n please select the available option.\n");
-    printf("Product 1 - A - 2.00 dhm\n");
-    printf("Product 2 - B - 3.00dhm\n");
-    printf("Product 3 - C- 5.25dhm\n");
-    printf("Admin Mode.\n");
-    printf("Exit.\n");
-    
-int choice;
-    float product1Price = 2.0;
-    float product2Price = 3.0;
-    float product3Price = 5.25;
-    float balance = 0.0;
+// Vending machine products
+int quantity_Pepsi = 20;
+int quantity_LaysChips = 12;
+int quantity_Oreo = 14;
 
+float price_Pepsi = 3.0;
+float price_LaysChips = 5.5;
+float price_Oreo = 2.0;
+
+void replenishItems() {
+    // Reset the quantity of each item in the range [1:20]
+    quantity_Pepsi = 1 + rand() % 20;
+    quantity_LaysChips = 1 + rand() % 20;
+    quantity_Oreo = 1 + rand() % 20;
+}
+
+void changeItemPrices() {
+    // Allow operator to change prices
+    printf("Enter new price for Pepsi: ");
+    scanf("%f", &price_Pepsi);
+    printf("Enter new price for Lay's Chips: ");
+    scanf("%f", &price_LaysChips);
+    printf("Enter new price for Oreo: ");
+    scanf("%f", &price_Oreo);
+}
+
+void displayTotalSale() {
+    // Print and reset the total sale amount
+    printf("Total Sale Amount: %.2f\n", total_amount);
+    printf("Would you like to reset the total sale amount to zero? (1 for Yes, 0 for No): ");
+    int reset;
+    scanf("%d", &reset);
+    if (reset == 1) {
+        printf("Total Sale Amount reset to zero. Please collect the money from the machine.\n");
+        total_amount = 0;
+    }
+}
+
+void displayItemAvailability() {
+    // Print out item availability
+    printf("Pepsi: %d available\n", quantity_Pepsi);
+    printf("Lay's Chips: %d available\n", quantity_LaysChips);
+    printf("Oreo: %d available\n", quantity_Oreo);
+}
+
+int main() {
     while (1) {
-        printf("Current Balance: %.2f dhm\n", balance);
+        printf("Welcome to the Vending Machine\n");
+        printf("1. Purchase Item for the consumer\n");
+        printf("2. Admin Mode for the vending machine operator\n");
+        printf("3. Exit\n");
 
-        printf("Enter your choice (1-3 for products, 4 for Admin Mode, 5 to Exit): ");
+        int choice;
         scanf("%d", &choice);
 
-        switch (choice) {
-            case 1:
-                printf("You selected Product 1 - A\n");
-                while (balance < product1Price) {
-                    float coin;
-                    printf("Insert coin (1.00, 0.50, or 0.25 dhm): ");
-                    scanf("%f", &coin);
-                    if (coin == 1.0 || coin == 0.5 || coin == 0.25) {
-                        balance += coin;
-                    } else {
-                        printf("Invalid coin. Please insert a valid coin.\n");
+        if (choice == 1) {
+            printf("Available items:\n");
+            printf("1. Pepsi: %.2f\n", price_Pepsi);
+            printf("2. Lay's Chips: %.2f\n", price_LaysChips);
+            printf("3. Oreo: %.2f\n", price_Oreo);
+
+            int item_choice;
+            printf("Enter the item number to purchase (0 to cancel): ");
+            scanf("%d", &item_choice);
+
+            if (item_choice == 0) {
+                continue;
+            }
+
+            float item_price;
+            int *item_quantity;
+
+            if (item_choice == 1) {
+                item_price = price_Pepsi;
+                item_quantity = &quantity_Pepsi;
+            } else if (item_choice == 2) {
+                item_price = price_LaysChips;
+                item_quantity = &quantity_LaysChips;
+            } else if (item_choice == 3) {
+                item_price = price_Oreo;
+                item_quantity = &quantity_Oreo;
+            } else {
+                printf("Invalid item choice. Please try again.\n");
+                continue;
+            }
+
+            printf("You have chosen %s for %.2f. Confirm (1 for Yes, 0 for No): ", 
+                (item_choice == 1) ? "Pepsi" : (item_choice == 2) ? "Lay's Chips" : "Oreo", item_price);
+            int confirm;
+            scanf("%d", &confirm);
+
+            if (confirm != 1) {
+                continue;
+            }
+
+            float payment = 0;
+            while (payment < item_price) {
+                float coin;
+                printf("Insert a coin (1, 0.5, 0.25 Dirham): ");
+                scanf("%f", &coin);
+
+                if (coin == 1 || coin == 0.5 || coin == 0.25) {
+                    payment += coin;
+                } else {
+                    printf("Invalid coin. Do you want to cancel the purchase? (1 for Yes, 0 for No): ");
+                    int cancel;
+                    scanf("%d", &cancel);
+                    if (cancel == 1) {
+                        break;
                     }
                 }
-                printf("Product 1 - A dispensed. Enjoy!\n");
-                balance -= product1Price;
-                break;
-            case 2:
-                printf("You selected Product 2 - B\n");
-                while (balance < product2Price) {
-                    float coin;
-                    printf("Insert coin (1.00, 0.50, or 0.25 dhm): ");
-                    scanf("%f", &coin);
-                    if (coin == 1.0 || coin == 0.5 || coin == 0.25) {
-                        balance += coin;
+            }
+
+            if (payment >= item_price) {
+                *item_quantity -= 1;
+                total_amount += item_price;
+                float change = payment - item_price;
+                printf("You have purchased %s for %.2f. You paid %.2f. Change: %.2f\n", 
+                    (item_choice == 1) ? "Pepsi" : (item_choice == 2) ? "Lay's Chips" : "Oreo", item_price, payment, change);
+
+                if (*item_quantity <= Min) {
+                    printf("Alert: %s is running low!\n", 
+                        (item_choice == 1) ? "Pepsi" : (item_choice == 2) ? "Lay's Chips" : "Oreo");
+                }
+            } else {
+                printf("Payment is not sufficient. Purchase canceled.\n");
+            }
+        } else if (choice == 2) {
+            int admin_password;
+            printf("Enter the admin password: ");
+            scanf("%d", &admin_password);
+
+            if (admin_password == password) {
+                while (1) {
+                    printf("Admin Mode\n");
+                    printf("1. Replenish Items\n");
+                    printf("2. Change Item Prices\n");
+                    printf("3. Display Total Sale\n");
+                    printf("4. Display Item Availability\n");
+                    printf("0. Exit Admin Mode\n");
+
+                    int admin_choice;
+                    scanf("%d", &admin_choice);
+
+                    if (admin_choice == 0) {
+                        break;
+                    } else if (admin_choice == 1) {
+                        replenishItems();
+                        printf("Items replenished.\n"); 
+                    } else if (admin_choice == 2) {
+                        changeItemPrices();
+                        printf("Item prices changed.\n");
+                    } else if (admin_choice == 3) {
+                        displayTotalSale();
+                    } else if (admin_choice == 4) {
+                        displayItemAvailability();
                     } else {
-                        printf("Invalid coin. Please insert a valid coin.\n");
+                        printf("Invalid choice. Please try again.\n");
                     }
                 }
-                printf("Product 2 - B dispensed. Enjoy!\n");
-                balance -= product2Price;
-                break;
-            case 3:
-                printf("You selected Product 3 - C\n");
-                while (balance < product3Price) {
-                    float coin;
-                    printf("Insert coin (1.00, 0.50, or 0.25 dhm): ");
-                    scanf("%f", &coin);
-                    if (coin == 1.0 || coin == 0.5 || coin == 0.25) {
-                        balance += coin;
-                    } else {
-                        printf("Invalid coin. Please insert a valid coin.\n");
-                    }
-                }
-                printf("Product 3 - C dispensed. Enjoy!\n");
-                balance -= product3Price;
-                break;
-            case 4:
-                printf("Entering Admin Mode...\n");
-                // Add your admin mode code here
-                break;
-            case 5:
-                printf("Exiting. Thank you!\n");
-                return 0;
-            default:
-                printf("Invalid choice. Please select a valid option.\n");
-                break;
+            } else {
+                printf("Incorrect admin password. Exiting Admin Mode.\n");
+            }
+        } else if (choice == 3) {
+            printf("Goodbye!\n");
+            break;
+        } else {
+            printf("Invalid choice. Please try again.\n");
         }
     }
 
