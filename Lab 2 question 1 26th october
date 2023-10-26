@@ -1,0 +1,148 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+#define SIZE 24
+#define nRows 8
+#define nCols 3
+
+// Function prototypes
+void set_array(int arr[]);
+void print_array(int arr[]);
+void print_array2(int arr[]);
+void del_align(int arr[], int pos);
+void insert_align(int arr[], int pos, int value);
+void reshape(int arr[], int arr2d[nRows][nCols]);
+void print_matrix(int arr2d[nRows][nCols]);
+void print_trans_matrix(int arr2d[nRows][nCols]);
+bool found_duplicate(int arr[]);
+void flip_array(int arr[]);
+
+int main() {
+    int arr[SIZE];
+    int arr2d[nRows][nCols];
+
+    set_array(arr);
+    print_array(arr);
+    print_array2(arr);
+    del_align(arr, 1);
+    insert_align(arr, 1, 5);
+    reshape(arr, arr2d);
+    print_matrix(arr2d);
+    print_trans_matrix(arr2d);
+
+    if (found_duplicate(arr)) {
+        printf("Duplicate found.\n");
+    } else {
+        printf("Duplicate not found.\n");
+    }
+
+    flip_array(arr);
+    print_array(arr);
+
+    return 0;
+}
+
+void set_array(int arr[]) {
+    int i;
+    for (i = 0; i < SIZE; i++) {
+        arr[i] = i;
+    }
+}
+
+void print_array(int arr[]) {
+    int i;
+    for (i = 0; i < SIZE; i++) {
+        printf("%d\n", arr[i]);
+    }
+}
+
+void print_array2(int arr[]) {
+    int i, *ptr = arr;
+    for (i = 0; i < SIZE; i++) {
+        printf("%d\n", *ptr);
+        ptr++;
+    }
+}
+
+void del_align(int arr[], int pos) {
+    if (pos >= SIZE) {
+        printf("This position is out of range of the array.\n");
+        return;
+    } else {
+        int i;
+        for (i = pos + 1; i < SIZE; i++) {
+            arr[i - 1] = arr[i];
+        }
+        arr[SIZE - 1] = 0; // Set the last element to 0
+    }
+}
+
+void insert_align(int arr[], int pos, int value) {
+    if (pos >= SIZE) {
+        printf("This position is out of range of the array.\n");
+        return;
+    } else {
+        int i;
+        for (i = SIZE - 1; i > pos; i--) {
+            arr[i] = arr[i - 1];
+        }
+        arr[pos] = value;
+    }
+}
+
+void reshape(int arr[], int arr2d[nRows][nCols]) {
+    if (SIZE != nRows * nCols) {
+        printf("Elements can't be copied because the size doesn't match.\n");
+    } else {
+        int i, j;
+        for (i = 0; i < nRows; i++) {
+            for (j = 0; j < nCols; j++) {
+                arr2d[i][j] = arr[i * nCols + j];
+            }
+        }
+    }
+}
+
+void print_matrix(int arr2d[nRows][nCols]) {
+    int i, j;
+    for (i = 0; i < nRows; i++) {
+        for (j = 0; j < nCols; j++) {
+            printf("%d  ", arr2d[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+void print_trans_matrix(int arr2d[nRows][nCols]) {
+    int i, j;
+    for (i = 0; i < nCols; i++) {
+        for (j = 0; j < nRows; j++) {
+            printf("%d  ", arr2d[j][i]);
+        }
+        printf("\n");
+    }
+}
+
+bool found_duplicate(int arr[]) {
+    int i, j;
+    for (i = 0; i < SIZE - 1; i++) {
+        for (j = i + 1; j < SIZE; j++) {
+            if (arr[i] == arr[j]) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+void flip_array(int arr[]) {
+    int i = 0, j = SIZE - 1, temp;
+    while (i < j) {
+        temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+        i++;
+        j--;
+    }
+}
