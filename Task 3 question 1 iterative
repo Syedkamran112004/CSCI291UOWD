@@ -30,10 +30,7 @@ void shuffleOddEven(int *arr, int size) {
         printf("%d ", evenPart[i]);
     }
 
-    printf("\nOriginal Array: ");
-    for (int i = 0; i < size; ++i) {
-        printf("%d ", arr[i]);
-    }
+    // Removed the printing of the original array
 }
 
 int main() {
