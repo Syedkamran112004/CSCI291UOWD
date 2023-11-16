@@ -1,0 +1,55 @@
+#include <stdio.h>
+
+void iterative_shuffle(int *arr, int array_size) {
+    int odd_part[array_size];   // Array to store odd values
+    int even_part[array_size];  // Array to store even values
+
+    // Initialize arrays to store odd and even values
+    for (int i = 0; i < array_size; ++i) {
+        odd_part[i] = 0;
+        even_part[i] = 0;
+    }
+
+    // Separate odd and even values
+    int odd_index = 0;
+    int even_index = 0;
+
+    for (int i = 0; i < array_size; ++i) {
+        if (arr[i] % 2 == 1) {
+            odd_part[odd_index++] = arr[i];
+        } else {
+            even_part[even_index++] = arr[i];
+        }
+    }
+
+    // Print the odd part
+    printf("Odd Part: ");
+    for (int i = 0; i < odd_index; ++i) {
+        printf("%d ", odd_part[i]);
+    }
+
+    // Print the even part
+    printf("\nEven Part: ");
+    for (int i = 0; i < even_index; ++i) {
+        printf("%d ", even_part[i]);
+    }
+
+    // Print the original array
+    printf("\nOriginal Array: ");
+    for (int i = 0; i < array_size; ++i) {
+        printf("%d ", arr[i]);
+    }
+}
+
+int main() {
+    int input_array[] = {1, 2, 3, 4, 5, 6, 7, 8};
+    int array_size = sizeof(input_array) / sizeof(input_array[0]);
+
+    // Call the iterative function
+    iterative_shuffle(input_array, array_size);
+
+    return 0;
+}
+
+
+ 
